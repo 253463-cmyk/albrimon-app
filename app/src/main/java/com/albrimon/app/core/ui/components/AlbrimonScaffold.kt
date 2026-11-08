@@ -59,10 +59,15 @@ fun AlbrimonScaffold(
                     NavigationBarItem(
                         selected = selected,
                         onClick = {
-                            navController.navigate(item.route) {
-                                popUpTo(Routes.HOME) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
+                            if (item.route == Routes.HOME) {
+                                if (!navController.popBackStack(Routes.HOME, inclusive = false)) {
+                                    navController.navigate(Routes.HOME) { launchSingleTop = true }
+                                }
+                            } else {
+                                navController.navigate(item.route) {
+                                    popUpTo(Routes.HOME)
+                                    launchSingleTop = true
+                                }
                             }
                         },
                         icon = {
