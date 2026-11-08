@@ -6,29 +6,59 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Set of Material typography styles to start with
+// El diseño usa Playfair Display (acentos) y Montserrat (texto general).
+// Mientras no se agreguen los .ttf en res/font, se usan Serif y SansSerif del sistema.
+// Para cambiarlas: val AccentFont = FontFamily(Font(R.font.playfair_display)) y igual con Montserrat.
+val AccentFont: FontFamily = FontFamily.Serif
+val BodyFont: FontFamily = FontFamily.SansSerif
+
 val Typography = Typography(
+    displayLarge = TextStyle(
+        fontFamily = AccentFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 46.sp,
+        lineHeight = 52.sp
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = AccentFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 26.sp,
+        lineHeight = 32.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = BodyFont,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
+        lineHeight = 30.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = BodyFont,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        lineHeight = 22.sp
+    ),
     bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = BodyFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
+        lineHeight = 24.sp
     ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
+    bodyMedium = TextStyle(
+        fontFamily = BodyFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 20.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = BodyFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 16.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = BodyFont,
         fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+        fontSize = 12.sp,
+        lineHeight = 16.sp
     )
-    */
 )
