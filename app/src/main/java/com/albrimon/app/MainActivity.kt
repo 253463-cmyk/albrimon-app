@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.albrimon.app.navigation.AppNavigation
-import com.albrimon.app.ui.theme.AlbrimonTheme
+import com.albrimon.app.navigation.AppNavGraph
+import com.albrimon.app.core.ui.theme.AlbrimonTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation()
+                    AppNavGraph()
                 }
             }
         }

@@ -1,7 +1,7 @@
 package com.albrimon.app.data.repository
 
-import com.albrimon.app.data.model.Client
-import com.albrimon.app.data.model.Measurements
+import com.albrimon.app.domain.model.Client
+import com.albrimon.app.domain.model.Measurements
 
 // Datos de ejemplo. Más adelante este repositorio consultará la BD local (Room)
 // y sincronizará con la API REST, como en el diagrama de secuencia.

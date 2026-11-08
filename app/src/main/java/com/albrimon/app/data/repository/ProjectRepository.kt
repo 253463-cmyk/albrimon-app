@@ -1,7 +1,7 @@
 package com.albrimon.app.data.repository
 
-import com.albrimon.app.data.model.Project
-import com.albrimon.app.data.model.ProjectStatus
+import com.albrimon.app.domain.model.Project
+import com.albrimon.app.domain.model.ProjectStatus
 object ProjectRepository {
     val projects: List<Project> = listOf(
         Project(1, "Vestido midi", "Ana López", ProjectStatus.PENDIENTE, "12 de Diciembre del 2026"),
