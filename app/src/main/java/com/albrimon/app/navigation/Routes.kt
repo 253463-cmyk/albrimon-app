@@ -15,6 +15,10 @@ object Routes {
     const val CLIENT_DETAIL = "$CLIENT_DETAIL_PREFIX/{clientId}"
     fun clientDetail(id: Int) = "$CLIENT_DETAIL_PREFIX/$id"
 
+    const val CLIENT_PROJECTS_PREFIX = "client_projects"
+    const val CLIENT_PROJECTS = "$CLIENT_PROJECTS_PREFIX/{clientId}"
+    fun clientProjects(id: Int) = "$CLIENT_PROJECTS_PREFIX/$id"
+
     const val SOON = "soon/{title}"
     fun soon(title: String) = "soon/${Uri.encode(title)}"
 }

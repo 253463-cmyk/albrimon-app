@@ -9,5 +9,7 @@ data class ProjectListUiState(
     val selectedStatus: ProjectStatus? = null,
     val isLoading: Boolean = false,
     val projects: List<Project> = emptyList(),
-    val error: String? = null
+    val error: String? = null,
+    // Si no es null, la lista muestra solo los proyectos de ese cliente
+    val clientName: String? = null
 )

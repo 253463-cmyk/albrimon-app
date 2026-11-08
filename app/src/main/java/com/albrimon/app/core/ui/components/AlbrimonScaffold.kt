@@ -55,7 +55,8 @@ fun AlbrimonScaffold(
             NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceVariant) {
                 bottomItems.forEach { item ->
                     val selected = currentRoute == item.route ||
-                        (item.route == Routes.CLIENTS && currentRoute == Routes.CLIENT_DETAIL)
+                        (item.route == Routes.CLIENTS && currentRoute == Routes.CLIENT_DETAIL) ||
+                        (item.route == Routes.PROJECTS && currentRoute == Routes.CLIENT_PROJECTS)
                     NavigationBarItem(
                         selected = selected,
                         onClick = {

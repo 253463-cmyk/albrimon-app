@@ -10,6 +10,7 @@ enum class ProjectStatus(val label: String) {
 
 data class Project(
     val id: Int,
+    val clientId: Int,
     val name: String,
     val clientName: String,
     val status: ProjectStatus,

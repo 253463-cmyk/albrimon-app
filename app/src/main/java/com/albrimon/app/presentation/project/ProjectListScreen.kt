@@ -65,7 +65,7 @@ fun ProjectListScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Proyectos",
+                    text = state.clientName?.let { "Proyectos de $it" } ?: "Proyectos",
                     modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.titleLarge
                 )

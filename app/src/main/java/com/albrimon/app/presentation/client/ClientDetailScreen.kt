@@ -118,7 +118,7 @@ fun ClientDetailScreen(
                     title = "Proyectos relacionados",
                     subtitle = "${state.relatedProjects} proyectos",
                     trailing = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    onClick = { navController.navigate(Routes.PROJECTS) }
+                    onClick = { navController.navigate(Routes.clientProjects(clientId)) }
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))

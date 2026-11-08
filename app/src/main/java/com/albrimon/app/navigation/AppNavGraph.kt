@@ -66,6 +66,12 @@ fun AppNavGraph() {
 
         composable(Routes.PROJECTS) { ProjectListScreen(navController = navController) }
 
+        // Proyectos de un solo cliente: el id llega como argumento y lo lee el ViewModel
+        composable(
+            route = Routes.CLIENT_PROJECTS,
+            arguments = listOf(navArgument("clientId") { type = NavType.IntType })
+        ) { ProjectListScreen(navController = navController) }
+
         composable(Routes.SCRAPS) {
             ComingSoonScreen(title = "Retazos", navController = navController)
         }

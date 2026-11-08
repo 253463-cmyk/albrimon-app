@@ -15,7 +15,7 @@ class ClientDetailViewModel : ViewModel() {
 
     fun load(clientId: Int) {
         val client = ClientRepository.getById(clientId)
-        val related = ProjectRepository.projects.count { it.clientName == client?.name }
+        val related = ProjectRepository.getByClient(clientId).size
         _uiState.update { it.copy(client = client, relatedProjects = related) }
     }
 
