@@ -16,6 +16,7 @@ import com.albrimon.app.presentation.client.ClientDetailScreen
 import com.albrimon.app.presentation.client.ClientListScreen
 import com.albrimon.app.core.ui.components.AlbrimonLoadingScreen
 import com.albrimon.app.core.ui.components.ComingSoonScreen
+import com.albrimon.app.presentation.cost.CostCalculatorScreen
 import com.albrimon.app.presentation.home.HomeScreen
 import com.albrimon.app.presentation.project.ProjectListScreen
 import com.albrimon.app.presentation.scrap.CutPlanScreen
@@ -98,6 +99,8 @@ fun AppNavGraph(startViewModel: StartViewModel = hiltViewModel()) {
         ) { ProjectListScreen(navController = navController) }
 
         composable(Routes.SCRAPS) { ScrapListScreen(navController = navController) }
+
+        composable(Routes.COSTS) { CostCalculatorScreen(navController = navController) }
 
         // scrapId = 0 significa "registrar retazo nuevo"; ScrapFormViewModel lo lee con SavedStateHandle
         composable(

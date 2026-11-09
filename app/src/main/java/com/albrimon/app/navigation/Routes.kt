@@ -10,6 +10,7 @@ object Routes {
     const val CLIENTS = "clients"
     const val PROJECTS = "projects"
     const val SCRAPS = "scraps"
+    const val COSTS = "costs"
 
     const val CLIENT_DETAIL_PREFIX = "client_detail"
     const val CLIENT_DETAIL = "$CLIENT_DETAIL_PREFIX/{clientId}"
