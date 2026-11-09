@@ -18,6 +18,9 @@ import com.albrimon.app.core.ui.components.AlbrimonLoadingScreen
 import com.albrimon.app.core.ui.components.ComingSoonScreen
 import com.albrimon.app.presentation.home.HomeScreen
 import com.albrimon.app.presentation.project.ProjectListScreen
+import com.albrimon.app.presentation.scrap.CutPlanScreen
+import com.albrimon.app.presentation.scrap.ScrapFormScreen
+import com.albrimon.app.presentation.scrap.ScrapListScreen
 
 @Composable
 fun AppNavGraph(startViewModel: StartViewModel = hiltViewModel()) {
@@ -94,9 +97,15 @@ fun AppNavGraph(startViewModel: StartViewModel = hiltViewModel()) {
             arguments = listOf(navArgument("clientId") { type = NavType.IntType })
         ) { ProjectListScreen(navController = navController) }
 
-        composable(Routes.SCRAPS) {
-            ComingSoonScreen(title = "Retazos", navController = navController)
-        }
+        composable(Routes.SCRAPS) { ScrapListScreen(navController = navController) }
+
+        // scrapId = 0 significa "registrar retazo nuevo"; ScrapFormViewModel lo lee con SavedStateHandle
+        composable(
+            route = Routes.SCRAP_FORM,
+            arguments = listOf(navArgument("scrapId") { type = NavType.LongType })
+        ) { ScrapFormScreen(navController = navController) }
+
+        composable(Routes.SCRAP_PLAN) { CutPlanScreen(navController = navController) }
 
         composable(Routes.SOON) { backStackEntry ->
             val title = backStackEntry.arguments?.getString("title") ?: "Próximamente"
