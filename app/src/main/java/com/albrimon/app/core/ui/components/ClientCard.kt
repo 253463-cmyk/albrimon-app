@@ -50,7 +50,7 @@ fun ClientCard(client: Client, onClick: () -> Unit) {
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "Talla ${client.size}  ·  ${client.age} años",
+                    text = client.summary,
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
