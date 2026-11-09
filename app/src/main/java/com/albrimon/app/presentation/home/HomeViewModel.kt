@@ -34,7 +34,7 @@ class HomeViewModel @Inject constructor(
         HomeModule("Proyectos", "Crea y consulta\ntus prendas", Icons.Outlined.FolderOpen, RosaSuave, Routes.PROJECTS),
         HomeModule("Patrones", "Calcula y diseña", Icons.Outlined.DesignServices, NaranjaSuave, Routes.soon("Patrones")),
         HomeModule("Materiales", "Telas y retazos", Icons.Outlined.Layers, VerdeSalvia, Routes.SCRAPS),
-        HomeModule("Costos", "Presupuesto y venta", Icons.Outlined.Paid, RosaSuave, Routes.soon("Costos")),
+        HomeModule("Costos", "Presupuesto y venta", Icons.Outlined.Paid, RosaSuave, Routes.COSTS),
         HomeModule("Nuevo proyecto", "Comienza a diseñar", Icons.Filled.Add, RosaEmpolvado, Routes.soon("Nuevo proyecto"))
     )
 
