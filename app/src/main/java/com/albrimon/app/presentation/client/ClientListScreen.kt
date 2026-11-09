@@ -18,26 +18,32 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.albrimon.app.navigation.Routes
 import com.albrimon.app.core.ui.components.AlbrimonScaffold
 import com.albrimon.app.core.ui.components.ClientCard
+import com.albrimon.app.core.ui.components.ErrorBox
+import com.albrimon.app.core.ui.components.LoadingBox
 import com.albrimon.app.core.ui.components.FilterPills
 import com.albrimon.app.core.ui.components.SearchField
 
 @Composable
 fun ClientListScreen(
     navController: NavController,
-    viewModel: ClientListViewModel = viewModel()
+    viewModel: ClientListViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Se recarga al entrar y al volver del formulario de nuevo cliente
+    LaunchedEffect(Unit) { viewModel.refresh() }
 
     AlbrimonScaffold(navController = navController) { padding ->
         Column(
@@ -53,8 +59,7 @@ fun ClientListScreen(
                     modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.titleLarge
                 )
-                // Nuevo cliente (formulario pendiente para la siguiente iteración)
-                IconButton(onClick = { navController.navigate(Routes.soon("Nuevo cliente")) }) {
+                IconButton(onClick = { navController.navigate(Routes.CLIENT_FORM) }) {
                     Icon(
                         imageVector = Icons.Outlined.AddCircleOutline,
                         contentDescription = "Nuevo cliente",
@@ -78,7 +83,12 @@ fun ClientListScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (state.clients.isEmpty()) {
+            val error = state.error
+            if (state.isLoading) {
+                LoadingBox()
+            } else if (error != null) {
+                ErrorBox(message = error, onRetry = viewModel::refresh)
+            } else if (state.clients.isEmpty()) {
                 Text(
                     text = "No se encontraron clientes",
                     modifier = Modifier

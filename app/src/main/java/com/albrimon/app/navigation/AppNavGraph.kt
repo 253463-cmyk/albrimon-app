@@ -13,6 +13,7 @@ import com.albrimon.app.presentation.auth.LoginScreen
 import com.albrimon.app.presentation.auth.RegisterScreen
 import com.albrimon.app.presentation.auth.WelcomeScreen
 import com.albrimon.app.presentation.client.ClientDetailScreen
+import com.albrimon.app.presentation.client.ClientFormScreen
 import com.albrimon.app.presentation.client.ClientListScreen
 import com.albrimon.app.core.ui.components.AlbrimonLoadingScreen
 import com.albrimon.app.core.ui.components.ComingSoonScreen
@@ -84,18 +85,20 @@ fun AppNavGraph(startViewModel: StartViewModel = hiltViewModel()) {
 
         composable(
             route = Routes.CLIENT_DETAIL,
-            arguments = listOf(navArgument("clientId") { type = NavType.IntType })
+            arguments = listOf(navArgument("clientId") { type = NavType.LongType })
         ) { backStackEntry ->
-            val clientId = backStackEntry.arguments?.getInt("clientId") ?: 0
+            val clientId = backStackEntry.arguments?.getLong("clientId") ?: 0L
             ClientDetailScreen(clientId = clientId, navController = navController)
         }
+
+        composable(Routes.CLIENT_FORM) { ClientFormScreen(navController = navController) }
 
         composable(Routes.PROJECTS) { ProjectListScreen(navController = navController) }
 
         // Proyectos de un solo cliente: el id llega como argumento y lo lee el ViewModel
         composable(
             route = Routes.CLIENT_PROJECTS,
-            arguments = listOf(navArgument("clientId") { type = NavType.IntType })
+            arguments = listOf(navArgument("clientId") { type = NavType.LongType })
         ) { ProjectListScreen(navController = navController) }
 
         composable(Routes.SCRAPS) { ScrapListScreen(navController = navController) }

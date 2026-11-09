@@ -34,17 +34,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.albrimon.app.navigation.Routes
 import com.albrimon.app.core.ui.components.AlbrimonScaffold
+import com.albrimon.app.core.ui.components.ErrorBox
 import com.albrimon.app.core.ui.components.InitialsAvatar
+import com.albrimon.app.core.ui.components.LoadingBox
 
 @Composable
 fun ClientDetailScreen(
-    clientId: Int,
+    clientId: Long,
     navController: NavController,
-    viewModel: ClientDetailViewModel = viewModel()
+    viewModel: ClientDetailViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -65,7 +67,12 @@ fun ClientDetailScreen(
             }
 
             val client = state.client
-            if (client == null) {
+            val error = state.error
+            if (state.isLoading) {
+                LoadingBox()
+            } else if (error != null) {
+                ErrorBox(message = error, onRetry = { viewModel.load(clientId) })
+            } else if (client == null) {
                 Text(text = "Cliente no encontrado", color = MaterialTheme.colorScheme.onSurfaceVariant)
             } else {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -74,7 +81,7 @@ fun ClientDetailScreen(
                     Column {
                         Text(text = client.name, fontSize = 20.sp, fontWeight = FontWeight.Medium)
                         Text(
-                            text = "Talla ${client.size}  ·  ${client.age} años",
+                            text = client.summary,
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -83,7 +90,7 @@ fun ClientDetailScreen(
 
                 InfoRow(
                     icon = Icons.Filled.Call,
-                    title = "Teléfono: ${client.phone}",
+                    title = "Teléfono: ${client.phone.ifBlank { "sin registrar" }}",
                     subtitle = null,
                     trailing = null,
                     onClick = null
@@ -130,7 +137,7 @@ fun ClientDetailScreen(
 private fun MeasureLine(label: String, value: Int) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = label, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(text = "$value cm", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+        Text(text = if (value > 0) "$value cm" else "—", fontSize = 14.sp, fontWeight = FontWeight.Medium)
     }
 }
 

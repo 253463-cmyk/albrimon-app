@@ -14,11 +14,13 @@ object Routes {
 
     const val CLIENT_DETAIL_PREFIX = "client_detail"
     const val CLIENT_DETAIL = "$CLIENT_DETAIL_PREFIX/{clientId}"
-    fun clientDetail(id: Int) = "$CLIENT_DETAIL_PREFIX/$id"
+    fun clientDetail(id: Long) = "$CLIENT_DETAIL_PREFIX/$id"
 
     const val CLIENT_PROJECTS_PREFIX = "client_projects"
     const val CLIENT_PROJECTS = "$CLIENT_PROJECTS_PREFIX/{clientId}"
-    fun clientProjects(id: Int) = "$CLIENT_PROJECTS_PREFIX/$id"
+    fun clientProjects(id: Long) = "$CLIENT_PROJECTS_PREFIX/$id"
+
+    const val CLIENT_FORM = "client_form"
 
     // Retazos: lista -> formulario (0 = nuevo) / plan de corte
     const val SCRAP_FORM_PREFIX = "scrap_form"

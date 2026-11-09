@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,11 +37,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.albrimon.app.domain.model.ProjectStatus
 import com.albrimon.app.navigation.Routes
 import com.albrimon.app.core.ui.components.AlbrimonScaffold
+import com.albrimon.app.core.ui.components.ErrorBox
+import com.albrimon.app.core.ui.components.LoadingBox
 import com.albrimon.app.core.ui.components.NotificationBell
 import com.albrimon.app.core.ui.components.ProjectCard
 import com.albrimon.app.core.ui.components.SearchField
@@ -51,9 +54,12 @@ import com.albrimon.app.core.ui.theme.VerdeFiltroClaro
 @Composable
 fun ProjectListScreen(
     navController: NavController,
-    viewModel: ProjectListViewModel = viewModel()
+    viewModel: ProjectListViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Se recarga al entrar y al volver de un detalle o formulario
+    LaunchedEffect(Unit) { viewModel.refresh() }
 
     AlbrimonScaffold(navController = navController) { padding ->
         Column(
@@ -86,7 +92,12 @@ fun ProjectListScreen(
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            if (state.projects.isEmpty()) {
+            val error = state.error
+            if (state.isLoading) {
+                LoadingBox()
+            } else if (error != null) {
+                ErrorBox(message = error, onRetry = viewModel::refresh)
+            } else if (state.projects.isEmpty()) {
                 Text(
                     text = "No se encontraron proyectos",
                     modifier = Modifier

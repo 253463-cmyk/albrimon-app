@@ -2,29 +2,55 @@ package com.albrimon.app.presentation.project
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.albrimon.app.data.remote.ApiResult
+import com.albrimon.app.data.repository.ProjectRepository
 import com.albrimon.app.domain.model.Project
 import com.albrimon.app.domain.model.ProjectStatus
-import com.albrimon.app.data.repository.ClientRepository
-import com.albrimon.app.data.repository.ProjectRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class ProjectListViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
+@HiltViewModel
+class ProjectListViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val repository: ProjectRepository
+) : ViewModel() {
 
     // clientId llega como argumento de navegación; si es null se muestran todos los proyectos
-    private val clientId: Int? = savedStateHandle.get<Int>("clientId")
+    private val clientId: Long? = savedStateHandle.get<Long>("clientId")
 
-    private val allProjects: List<Project> =
-        if (clientId == null) ProjectRepository.projects else ProjectRepository.getByClient(clientId)
+    private var allProjects: List<Project> = emptyList()
 
-    private val clientName: String? = clientId?.let { ClientRepository.getById(it)?.name }
-
-    private val _uiState = MutableStateFlow(
-        ProjectListUiState(projects = allProjects, clientName = clientName)
-    )
+    private val _uiState = MutableStateFlow(ProjectListUiState(isLoading = true))
     val uiState: StateFlow<ProjectListUiState> = _uiState.asStateFlow()
+
+    /** Se llama al abrir la pantalla y al regresar de un detalle o formulario. */
+    fun refresh() {
+        _uiState.update { it.copy(isLoading = allProjects.isEmpty(), error = null) }
+        viewModelScope.launch {
+            val result = if (clientId == null) repository.projects() else repository.projectsByClient(clientId)
+            when (result) {
+                is ApiResult.Success -> {
+                    allProjects = result.data
+                    _uiState.update {
+                        applyFilters(
+                            it.copy(
+                                isLoading = false,
+                                // El nombre del cliente viene en cada proyecto
+                                clientName = if (clientId != null) result.data.firstOrNull()?.clientName else null
+                            )
+                        )
+                    }
+                }
+                is ApiResult.Failure -> _uiState.update { it.copy(isLoading = false, error = result.message) }
+            }
+        }
+    }
 
     fun onSearchQueryChange(query: String) {
         _uiState.update { applyFilters(it.copy(searchQuery = query)) }
