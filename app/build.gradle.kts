@@ -18,6 +18,12 @@ android {
         versionCode = 1
         versionName = "26.1.0"
 
+        // URL de la API. Emulador: 10.0.2.2 apunta a la compu donde corre el backend.
+        // En un celular físico se cambia en gradle.properties: albrimon.baseUrl=http://192.168.X.X:8080/api/
+        val baseUrl = providers.gradleProperty("albrimon.baseUrl")
+            .orElse("http://10.0.2.2:8080/api/").get()
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -72,6 +78,10 @@ dependencies {
 
     // Coil (imágenes)
     implementation(libs.coil.compose)
+
+    // DataStore (sesión) y corrutinas
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.coroutines.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
