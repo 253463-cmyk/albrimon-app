@@ -1,6 +1,9 @@
 package com.albrimon.app.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,17 +14,26 @@ import com.albrimon.app.presentation.auth.RegisterScreen
 import com.albrimon.app.presentation.auth.WelcomeScreen
 import com.albrimon.app.presentation.client.ClientDetailScreen
 import com.albrimon.app.presentation.client.ClientListScreen
+import com.albrimon.app.core.ui.components.AlbrimonLoadingScreen
 import com.albrimon.app.core.ui.components.ComingSoonScreen
 import com.albrimon.app.presentation.home.HomeScreen
 import com.albrimon.app.presentation.project.ProjectListScreen
 
 @Composable
-fun AppNavGraph() {
+fun AppNavGraph(startViewModel: StartViewModel = hiltViewModel()) {
     val navController = rememberNavController()
+
+    // Si ya hay sesión guardada (DataStore) se entra directo a Inicio al reabrir la app.
+    val startDestination by startViewModel.startDestination.collectAsStateWithLifecycle()
+    val start = startDestination
+    if (start == null) {
+        AlbrimonLoadingScreen()
+        return
+    }
 
     NavHost(
         navController = navController,
-        startDestination = Routes.WELCOME
+        startDestination = start
     ) {
         composable(Routes.WELCOME) {
             WelcomeScreen(
@@ -52,7 +64,17 @@ fun AppNavGraph() {
             )
         }
 
-        composable(Routes.HOME) { HomeScreen(navController = navController) }
+        composable(Routes.HOME) {
+            HomeScreen(
+                navController = navController,
+                onLogout = {
+                    // Limpia toda la pila para que "atrás" no regrese a pantallas con sesión
+                    navController.navigate(Routes.WELCOME) {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                    }
+                }
+            )
+        }
 
         composable(Routes.CLIENTS) { ClientListScreen(navController = navController) }
 

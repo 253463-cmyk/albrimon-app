@@ -27,7 +27,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.albrimon.app.core.ui.components.AlbrimonLoadingScreen
 import com.albrimon.app.core.ui.components.AlbrimonLogo
 import com.albrimon.app.core.ui.components.AlbrimonTextField
 import com.albrimon.app.core.ui.components.PrimaryButton
@@ -37,9 +38,15 @@ import com.albrimon.app.core.ui.theme.AccentFont
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
     onGoToLogin: () -> Unit,
-    viewModel: AuthViewModel = viewModel()
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Mientras responde la API se muestra la pantalla de carga
+    if (state.isLoading) {
+        AlbrimonLoadingScreen(message = "Creando tu cuenta...")
+        return
+    }
 
     Column(
         modifier = Modifier
