@@ -1,5 +1,6 @@
 package com.albrimon.app.presentation.scrap
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -41,7 +42,14 @@ data class CutPlanUiState(
 )
 
 @HiltViewModel
-class CutPlanViewModel @Inject constructor(private val repository: ScrapRepository) : ViewModel() {
+class CutPlanViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val repository: ScrapRepository
+) : ViewModel() {
+
+    /** Si se abre desde el detalle de un proyecto, llega su id y se selecciona solo. */
+    private val preselectedProjectId: Long? =
+        savedStateHandle.get<Long>("projectId")?.takeIf { it > 0 }
 
     private val _uiState = MutableStateFlow(CutPlanUiState())
     val uiState: StateFlow<CutPlanUiState> = _uiState.asStateFlow()
@@ -61,7 +69,11 @@ class CutPlanViewModel @Inject constructor(private val repository: ScrapReposito
         _uiState.update { it.copy(loadingProjects = true, error = null) }
         viewModelScope.launch {
             when (val result = repository.projects()) {
-                is ApiResult.Success -> _uiState.update { it.copy(loadingProjects = false, projects = result.data) }
+                is ApiResult.Success -> {
+                    _uiState.update { it.copy(loadingProjects = false, projects = result.data) }
+                    val preselected = result.data.firstOrNull { it.id == preselectedProjectId }
+                    if (preselected != null && _uiState.value.selected == null) selectProject(preselected)
+                }
                 is ApiResult.Failure -> _uiState.update { it.copy(loadingProjects = false, error = result.message) }
             }
         }
