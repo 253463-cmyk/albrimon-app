@@ -19,6 +19,12 @@ object Routes {
     const val CLIENT_PROJECTS = "$CLIENT_PROJECTS_PREFIX/{clientId}"
     fun clientProjects(id: Int) = "$CLIENT_PROJECTS_PREFIX/$id"
 
+    // Retazos: lista -> formulario (0 = nuevo) / plan de corte
+    const val SCRAP_FORM_PREFIX = "scrap_form"
+    const val SCRAP_FORM = "$SCRAP_FORM_PREFIX/{scrapId}"
+    fun scrapForm(id: Long) = "$SCRAP_FORM_PREFIX/$id"
+    const val SCRAP_PLAN = "scrap_plan"
+
     const val SOON = "soon/{title}"
     fun soon(title: String) = "soon/${Uri.encode(title)}"
 }
