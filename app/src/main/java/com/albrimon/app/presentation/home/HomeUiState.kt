@@ -12,7 +12,7 @@ data class HomeModule(
 )
 
 data class HomeUiState(
-    val userName: String = "Valeria",
+    val userName: String = "",
     val quote: String = "La moda también es una forma de cuidar el mundo.",
     val modules: List<HomeModule> = emptyList()
 )
