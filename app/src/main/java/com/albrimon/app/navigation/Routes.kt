@@ -27,7 +27,15 @@ object Routes {
     const val SCRAP_FORM = "$SCRAP_FORM_PREFIX/{scrapId}"
     fun scrapForm(id: Long) = "$SCRAP_FORM_PREFIX/$id"
     const val SCRAP_PLAN = "scrap_plan"
-    fun scrapPlan(projectId: Number) = "scrap_plan?projectId=$projectId"
+    // Ruta con argumento opcional: "scrap_plan" abre el selector, "scrap_plan?projectId=1" ya trae el proyecto
+    const val SCRAP_PLAN_ROUTE = "$SCRAP_PLAN?projectId={projectId}"
+    fun scrapPlan(projectId: Long) = "$SCRAP_PLAN?projectId=$projectId"
+
+    // Proyectos
+    const val PROJECT_DETAIL_PREFIX = "project_detail"
+    const val PROJECT_DETAIL = "$PROJECT_DETAIL_PREFIX/{projectId}"
+    fun projectDetail(id: Long) = "$PROJECT_DETAIL_PREFIX/$id"
+    const val PROJECT_FORM = "project_form"
 
     const val SOON = "soon/{title}"
     fun soon(title: String) = "soon/${Uri.encode(title)}"
