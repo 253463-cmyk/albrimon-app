@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ContentCut
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -43,12 +44,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import com.albrimon.app.core.ui.components.ErrorBox
 import com.albrimon.app.core.ui.components.LoadingBox
@@ -67,6 +73,25 @@ fun ProjectDetailScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var showAddPiece by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    // Cuando el ViewModel termina el PDF, se abre el menú de Android para compartirlo
+    LaunchedEffect(state.pdfFile) {
+        val file = state.pdfFile ?: return@LaunchedEffect
+        val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+        val send = Intent(Intent.ACTION_SEND).apply {
+            type = "application/pdf"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_SUBJECT, "Ficha técnica - ${state.project?.name.orEmpty()}")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        try {
+            context.startActivity(Intent.createChooser(send, "Compartir ficha técnica"))
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, "No hay apps para compartir el PDF", Toast.LENGTH_LONG).show()
+        }
+        viewModel.onPdfShared()
+    }
 
     // El aviso de éxito se oculta solo después de unos segundos
     LaunchedEffect(state.message) {
@@ -126,6 +151,17 @@ fun ProjectDetailScreen(
                 Icon(Icons.Filled.ContentCut, contentDescription = null)
                 Spacer(Modifier.width(8.dp))
                 Text("Plan de corte con retazos")
+            }
+            OutlinedButton(
+                onClick = viewModel::generatePdf,
+                enabled = !state.isBusy,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            ) {
+                Icon(Icons.Filled.PictureAsPdf, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
+                Text("Ficha técnica PDF")
             }
             if (state.pieces.isEmpty()) {
                 Text(

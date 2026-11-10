@@ -83,6 +83,10 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.android)
 
+    // QR: generar (zxing core) y escanear con la cámara (zxing-android-embedded)
+    implementation(libs.zxing.core)
+    implementation(libs.zxing.android.embedded)
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

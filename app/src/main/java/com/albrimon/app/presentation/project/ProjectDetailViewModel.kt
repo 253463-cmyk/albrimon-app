@@ -4,12 +4,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.albrimon.app.data.remote.ApiResult
+import com.albrimon.app.data.file.TechSheetPdfGenerator
 import com.albrimon.app.data.remote.dto.PieceRequest
+import com.albrimon.app.data.repository.ClientRepository
 import com.albrimon.app.data.repository.ProjectRepository
 import com.albrimon.app.domain.model.PatternPiece
 import com.albrimon.app.domain.model.Project
 import com.albrimon.app.domain.model.ProjectStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.io.File
 import javax.inject.Inject
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,13 +28,17 @@ data class ProjectDetailUiState(
     val isBusy: Boolean = false,
     val error: String? = null,
     /** Mensaje corto tras una acción ("Estado actualizado"). */
-    val message: String? = null
+    val message: String? = null,
+    /** PDF recién generado: la pantalla lo comparte y luego llama a onPdfShared(). */
+    val pdfFile: File? = null
 )
 
 @HiltViewModel
 class ProjectDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: ProjectRepository
+    private val repository: ProjectRepository,
+    private val clientRepository: ClientRepository,
+    private val pdfGenerator: TechSheetPdfGenerator
 ) : ViewModel() {
 
     private val projectId: Long = savedStateHandle.get<Long>("projectId") ?: 0L
@@ -125,4 +132,25 @@ class ProjectDetailViewModel @Inject constructor(
     }
 
     fun clearMessage() = _uiState.update { it.copy(message = null) }
+
+    /**
+     * Genera la ficha técnica en PDF (proyecto + medidas del cliente + piezas).
+     * Si no se pueden consultar las medidas, el PDF se genera igual sin esa sección.
+     */
+    fun generatePdf() {
+        val project = _uiState.value.project ?: return
+        if (_uiState.value.isBusy) return
+        _uiState.update { it.copy(isBusy = true, error = null, message = null) }
+        viewModelScope.launch {
+            val client = (clientRepository.client(project.clientId) as? ApiResult.Success)?.data
+            try {
+                val file = pdfGenerator.generate(project, client, _uiState.value.pieces)
+                _uiState.update { it.copy(isBusy = false, pdfFile = file) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isBusy = false, error = "No se pudo generar el PDF: ${e.message ?: "error desconocido"}") }
+            }
+        }
+    }
+
+    fun onPdfShared() = _uiState.update { it.copy(pdfFile = null, message = "Ficha técnica generada") }
 }

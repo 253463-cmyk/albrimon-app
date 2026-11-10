@@ -14,6 +14,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
+import androidx.activity.compose.rememberLauncherForActivityResult
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -41,6 +49,11 @@ fun RegisterScreen(
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Escáner QR (ZXing): abre la cámara, pide el permiso si hace falta y devuelve el texto leído
+    val qrScanner = rememberLauncherForActivityResult(ScanContract()) { result ->
+        result.contents?.let(viewModel::onLinkCodeChange)
+    }
 
     // Mientras responde la API se muestra la pantalla de carga
     if (state.isLoading) {
@@ -89,6 +102,30 @@ fun RegisterScreen(
             passwordVisible = state.passwordVisible,
             onTogglePassword = viewModel::togglePasswordVisibility
         )
+
+        // Opcional: si el taller ya la registró como cliente, el código conecta su cuenta
+        AlbrimonTextField(
+            value = state.linkCode,
+            onValueChange = viewModel::onLinkCodeChange,
+            placeholder = "Código de vínculo (opcional)",
+            leadingIcon = Icons.Filled.QrCodeScanner
+        )
+        OutlinedButton(
+            onClick = {
+                qrScanner.launch(
+                    ScanOptions()
+                        .setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+                        .setPrompt("Escanea el QR que te muestra tu diseñador")
+                        .setBeepEnabled(false)
+                        .setOrientationLocked(false)
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(Icons.Filled.QrCodeScanner, contentDescription = null)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Escanear QR de mi taller")
+        }
 
         state.error?.let {
             Text(text = it, color = MaterialTheme.colorScheme.error, fontSize = 13.sp)

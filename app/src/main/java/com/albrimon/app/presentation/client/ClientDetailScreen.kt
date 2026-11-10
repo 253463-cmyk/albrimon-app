@@ -41,6 +41,7 @@ import com.albrimon.app.core.ui.components.AlbrimonScaffold
 import com.albrimon.app.core.ui.components.ErrorBox
 import com.albrimon.app.core.ui.components.InitialsAvatar
 import com.albrimon.app.core.ui.components.LoadingBox
+import com.albrimon.app.core.ui.components.QrCodeImage
 
 @Composable
 fun ClientDetailScreen(
@@ -127,6 +128,8 @@ fun ClientDetailScreen(
                     trailing = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     onClick = { navController.navigate(Routes.clientProjects(clientId)) }
                 )
+
+                LinkAccountCard(linkCode = client.linkCode)
             }
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -172,6 +175,45 @@ private fun InfoRow(
             }
             if (trailing != null) {
                 Icon(imageVector = trailing, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+    }
+}
+
+/**
+ * QR con el código de vínculo del cliente. La clienta lo escanea al crear su cuenta
+ * (pantalla Registro) y así puede ver el avance de sus proyectos desde su celular.
+ * El backend borra el código cuando ya se usó, por eso null = cuenta ya vinculada.
+ */
+@Composable
+private fun LinkAccountCard(linkCode: String?) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(text = "Vincular cuenta del cliente", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            if (linkCode.isNullOrBlank()) {
+                Text(
+                    text = "✓ Este cliente ya vinculó su cuenta y puede ver sus proyectos.",
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                QrCodeImage(content = linkCode, size = 180.dp, contentDescription = "Código QR de vínculo")
+                Text(text = linkCode, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "Pide al cliente que lo escanee en \"Crear cuenta\" para ver sus proyectos.",
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
