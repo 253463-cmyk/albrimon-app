@@ -27,6 +27,7 @@ object Routes {
     const val SCRAP_FORM = "$SCRAP_FORM_PREFIX/{scrapId}"
     fun scrapForm(id: Long) = "$SCRAP_FORM_PREFIX/$id"
     const val SCRAP_PLAN = "scrap_plan"
+    fun scrapPlan(projectId: Number) = "scrap_plan?projectId=$projectId"
 
     const val SOON = "soon/{title}"
     fun soon(title: String) = "soon/${Uri.encode(title)}"
