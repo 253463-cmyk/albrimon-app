@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<paths>
-    <!-- Fotos de retazos: filesDir/scrap_photos/ (almacenamiento privado de la app) -->
-    <files-path name="scrap_photos" path="scrap_photos/" />
-    <!-- Fichas técnicas PDF generadas para compartir -->
-    <cache-path name="pdfs" path="pdfs/" />
-</paths>
