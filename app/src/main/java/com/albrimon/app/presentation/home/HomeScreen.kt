@@ -40,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.albrimon.app.core.ui.components.AlbrimonScaffold
+import com.albrimon.app.BuildConfig
 import com.albrimon.app.core.ui.components.InitialsAvatar
 import com.albrimon.app.core.ui.components.NotificationBell
 import com.albrimon.app.core.ui.theme.AccentFont
@@ -109,7 +110,14 @@ fun HomeScreen(
             }
 
             // Módulos (cuadrícula de 2 columnas)
-            state.modules.chunked(2).forEach { rowModules ->
+            state.modules.filter { it.title != "Patrones" }.chunked(2).forEach { rowModules ->
+                Text(
+                    text = "Albrimon v${BuildConfig.VERSION_NAME}",
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 11.sp,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     rowModules.forEach { module ->
                         ModuleTile(
