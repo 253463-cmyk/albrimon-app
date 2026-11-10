@@ -23,6 +23,7 @@ class AuthViewModel @Inject constructor(
     fun onNameChange(value: String) = _uiState.update { it.copy(name = value, error = null) }
     fun onEmailChange(value: String) = _uiState.update { it.copy(email = value, error = null) }
     fun onPasswordChange(value: String) = _uiState.update { it.copy(password = value, error = null) }
+    fun onLinkCodeChange(value: String) = _uiState.update { it.copy(linkCode = value.trim().uppercase(), error = null) }
     fun togglePasswordVisibility() = _uiState.update { it.copy(passwordVisible = !it.passwordVisible) }
 
     /** Valida los campos y, si son correctos, inicia sesión contra POST /api/auth/login. */
@@ -49,7 +50,7 @@ class AuthViewModel @Inject constructor(
             _uiState.update { it.copy(error = error) }
             return
         }
-        launchAuth(onSuccess) { repository.register(state.name, state.email, state.password) }
+        launchAuth(onSuccess) { repository.register(state.name, state.email, state.password, state.linkCode) }
     }
 
     private fun launchAuth(onSuccess: () -> Unit, call: suspend () -> ApiResult<*>) {

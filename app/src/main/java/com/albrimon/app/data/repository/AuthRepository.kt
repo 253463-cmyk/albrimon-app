@@ -32,8 +32,13 @@ class AuthRepository @Inject constructor(
     suspend fun login(email: String, password: String): ApiResult<Session> =
         persist(safeApiCall { api.login(LoginRequest(email.trim(), password)) })
 
-    suspend fun register(name: String, email: String, password: String): ApiResult<Session> =
-        persist(safeApiCall { api.register(RegisterRequest(name.trim(), email.trim(), password)) })
+    /** linkCode (opcional) vincula la cuenta nueva con su ficha de cliente del taller. */
+    suspend fun register(name: String, email: String, password: String, linkCode: String = ""): ApiResult<Session> =
+        persist(
+            safeApiCall {
+                api.register(RegisterRequest(name.trim(), email.trim(), password, linkCode.trim().ifBlank { null }))
+            }
+        )
 
     /** Cierra sesión y borra la copia local para no mostrar datos de otra cuenta. */
     suspend fun logout() {
