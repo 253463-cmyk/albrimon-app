@@ -19,6 +19,8 @@ import com.albrimon.app.core.ui.components.AlbrimonLoadingScreen
 import com.albrimon.app.core.ui.components.ComingSoonScreen
 import com.albrimon.app.presentation.cost.CostCalculatorScreen
 import com.albrimon.app.presentation.home.HomeScreen
+import com.albrimon.app.presentation.project.ProjectDetailScreen
+import com.albrimon.app.presentation.project.ProjectFormScreen
 import com.albrimon.app.presentation.project.ProjectListScreen
 import com.albrimon.app.presentation.scrap.CutPlanScreen
 import com.albrimon.app.presentation.scrap.ScrapFormScreen
@@ -95,6 +97,14 @@ fun AppNavGraph(startViewModel: StartViewModel = hiltViewModel()) {
 
         composable(Routes.PROJECTS) { ProjectListScreen(navController = navController) }
 
+        // El id lo lee ProjectDetailViewModel con SavedStateHandle
+        composable(
+            route = Routes.PROJECT_DETAIL,
+            arguments = listOf(navArgument("projectId") { type = NavType.LongType })
+        ) { ProjectDetailScreen(navController = navController) }
+
+        composable(Routes.PROJECT_FORM) { ProjectFormScreen(navController = navController) }
+
         // Proyectos de un solo cliente: el id llega como argumento y lo lee el ViewModel
         composable(
             route = Routes.CLIENT_PROJECTS,
@@ -111,7 +121,10 @@ fun AppNavGraph(startViewModel: StartViewModel = hiltViewModel()) {
             arguments = listOf(navArgument("scrapId") { type = NavType.LongType })
         ) { ScrapFormScreen(navController = navController) }
 
-        composable(Routes.SCRAP_PLAN) { CutPlanScreen(navController = navController) }
+        composable(
+            route = Routes.SCRAP_PLAN_ROUTE,
+            arguments = listOf(navArgument("projectId") { type = NavType.LongType; defaultValue = -1L })
+        ) { CutPlanScreen(navController = navController) }
 
         composable(Routes.SOON) { backStackEntry ->
             val title = backStackEntry.arguments?.getString("title") ?: "Próximamente"

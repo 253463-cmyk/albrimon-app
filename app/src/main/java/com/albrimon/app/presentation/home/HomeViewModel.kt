@@ -35,7 +35,7 @@ class HomeViewModel @Inject constructor(
         HomeModule("Patrones", "Calcula y diseña", Icons.Outlined.DesignServices, NaranjaSuave, Routes.soon("Patrones")),
         HomeModule("Materiales", "Telas y retazos", Icons.Outlined.Layers, VerdeSalvia, Routes.SCRAPS),
         HomeModule("Costos", "Presupuesto y venta", Icons.Outlined.Paid, RosaSuave, Routes.COSTS),
-        HomeModule("Nuevo proyecto", "Comienza a diseñar", Icons.Filled.Add, RosaEmpolvado, Routes.soon("Nuevo proyecto"))
+        HomeModule("Nuevo proyecto", "Comienza a diseñar", Icons.Filled.Add, RosaEmpolvado, Routes.PROJECT_FORM)
     )
 
     /** El nombre sale de la sesión guardada (DataStore), ya no es un valor fijo. */

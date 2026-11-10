@@ -19,9 +19,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.AddCircleOutline
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -75,6 +77,13 @@ fun ProjectListScreen(
                     modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.titleLarge
                 )
+                IconButton(onClick = { navController.navigate(Routes.PROJECT_FORM) }) {
+                    Icon(
+                        imageVector = Icons.Outlined.AddCircleOutline,
+                        contentDescription = "Nuevo proyecto",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
                 NotificationBell()
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -115,7 +124,7 @@ fun ProjectListScreen(
                     items(state.projects, key = { it.id }) { project ->
                         ProjectCard(
                             project = project,
-                            onClick = { navController.navigate(Routes.soon("Detalle de proyecto")) }
+                            onClick = { navController.navigate(Routes.projectDetail(project.id)) }
                         )
                     }
                 }
