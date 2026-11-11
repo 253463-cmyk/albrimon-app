@@ -15,8 +15,8 @@ android {
         applicationId = "com.albrimon.app"
         minSdk = 24
         targetSdk = 37
-        versionCode = 1
-        versionName = "26.1.0"
+        versionCode = 2
+        versionName = "26.1.1"
 
         // URL de la API. Emulador: 10.0.2.2 apunta a la compu donde corre el backend.
         // En un celular físico se cambia en gradle.properties: albrimon.baseUrl=http://192.168.X.X:8080/api/

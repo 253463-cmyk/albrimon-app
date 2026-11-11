@@ -1,6 +1,6 @@
 # Albrimon
 
-App Android para diseñadores de moda y sus clientas. Versión **26.1.0**.
+App Android para diseñadores de moda y sus clientas. Versión **26.1.1**.
 
 Permite registrar clientes con sus medidas, crear proyectos (prendas) con piezas de patronaje, administrar retazos de tela con foto, calcular un plan de corte y los costos de una prenda, generar la ficha técnica en PDF y vincular la cuenta de una clienta con su ficha mediante un código QR.
 
@@ -78,6 +78,10 @@ Los valores entre `<...>` los eliges tú. Con el correo y la contraseña que pon
 ### Dirección del servidor (`BASE_URL`)
 
 Por defecto la app usa `http://10.0.2.2:8080/api/`, que es como el emulador de Android llega al `localhost` de la PC.
+
+El backend de demostración está publicado en `https://albrimon-api.onrender.com`. En el plan gratuito el servicio se 
+duerme tras 15 minutos sin uso, así que el primer arranque puede tardar cerca de un minuto. Para usarlo, define 
+en `~/.gradle/gradle.properties`: `albrimon.baseUrl=https://albrimon-api.onrender.com/api/`.
 
 En un **celular físico** usa la IP de la PC en la misma red Wi-Fi. Agrega esta línea en `gradle.properties` y sincroniza:
 
