@@ -14,26 +14,27 @@ import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import com.albrimon.app.domain.repository.AuthRepository
 
 /**
  * Autenticación contra la API (POST /api/auth/login y /api/auth/register).
  * Guarda el JWT y los datos del usuario en DataStore para mantener la sesión.
  */
 @Singleton
-class AuthRepository @Inject constructor(
+class AuthRepositoryImpl @Inject constructor(
     private val api: AlbrimonApi,
     private val tokenStore: TokenStore,
     private val database: AlbrimonDatabase
-) {
-    val session: Flow<Session?> = tokenStore.session
+) : AuthRepository {
+    override val session: Flow<Session?> = tokenStore.session
 
-    suspend fun hasSession(): Boolean = tokenStore.hasSession()
+    override suspend fun hasSession(): Boolean = tokenStore.hasSession()
 
-    suspend fun login(email: String, password: String): ApiResult<Session> =
+    override suspend fun login(email: String, password: String): ApiResult<Session> =
         persist(safeApiCall { api.login(LoginRequest(email.trim(), password)) })
 
     /** linkCode (opcional) vincula la cuenta nueva con su ficha de cliente del taller. */
-    suspend fun register(name: String, email: String, password: String, linkCode: String = ""): ApiResult<Session> =
+    override suspend fun register(name: String, email: String, password: String, linkCode: String): ApiResult<Session> =
         persist(
             safeApiCall {
                 api.register(RegisterRequest(name.trim(), email.trim(), password, linkCode.trim().ifBlank { null }))
@@ -41,7 +42,7 @@ class AuthRepository @Inject constructor(
         )
 
     /** Cierra sesión y borra la copia local para no mostrar datos de otra cuenta. */
-    suspend fun logout() {
+    override suspend fun logout() {
         tokenStore.clear()
         withContext(Dispatchers.IO) { database.clearAllTables() }
     }

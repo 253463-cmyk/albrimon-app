@@ -14,7 +14,7 @@ import com.albrimon.app.core.ui.theme.NaranjaSuave
 import com.albrimon.app.core.ui.theme.RosaEmpolvado
 import com.albrimon.app.core.ui.theme.RosaSuave
 import com.albrimon.app.core.ui.theme.VerdeSalvia
-import com.albrimon.app.data.repository.AuthRepository
+import com.albrimon.app.domain.repository.AuthRepository
 import com.albrimon.app.navigation.Routes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

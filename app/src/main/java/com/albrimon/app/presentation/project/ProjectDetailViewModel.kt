@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.albrimon.app.data.remote.ApiResult
 import com.albrimon.app.data.file.TechSheetPdfGenerator
 import com.albrimon.app.data.remote.dto.PieceRequest
-import com.albrimon.app.data.repository.ClientRepository
-import com.albrimon.app.data.repository.ProjectRepository
+import com.albrimon.app.domain.repository.ClientRepository
+import com.albrimon.app.domain.repository.ProjectRepository
 import com.albrimon.app.domain.model.PatternPiece
 import com.albrimon.app.domain.model.Project
 import com.albrimon.app.domain.model.ProjectStatus

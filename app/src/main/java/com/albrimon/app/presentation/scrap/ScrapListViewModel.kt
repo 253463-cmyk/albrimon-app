@@ -6,8 +6,8 @@ import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
 import com.albrimon.app.domain.model.Scrap
 import com.albrimon.app.data.remote.ApiResult
-import com.albrimon.app.data.repository.AuthRepository
-import com.albrimon.app.data.repository.ScrapRepository
+import com.albrimon.app.domain.repository.AuthRepository
+import com.albrimon.app.domain.repository.ScrapRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

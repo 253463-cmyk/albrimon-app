@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.albrimon.app.data.remote.ApiResult
-import com.albrimon.app.data.repository.ProjectRepository
+import com.albrimon.app.domain.repository.ProjectRepository
 import com.albrimon.app.domain.model.Project
 import com.albrimon.app.domain.model.ProjectStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
