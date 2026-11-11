@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.albrimon.app.data.remote.ApiResult
 import com.albrimon.app.data.remote.dto.ClientRequest
-import com.albrimon.app.data.repository.ClientRepository
+import com.albrimon.app.domain.repository.ClientRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

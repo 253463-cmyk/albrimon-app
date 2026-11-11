@@ -11,7 +11,7 @@ import com.albrimon.app.data.local.PhotoStorage
 import com.albrimon.app.domain.model.Scrap
 import com.albrimon.app.data.remote.ApiResult
 import com.albrimon.app.data.remote.dto.ScrapRequest
-import com.albrimon.app.data.repository.ScrapRepository
+import com.albrimon.app.domain.repository.ScrapRepository
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

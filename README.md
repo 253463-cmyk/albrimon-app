@@ -61,14 +61,14 @@ Desde la carpeta `albrimon-backend`, en PowerShell:
 ```powershell
 $env:BOOTSTRAP_DESIGNER_NAME="Confeccionador Albrimon"
 $env:BOOTSTRAP_DESIGNER_EMAIL="disenador@albrimon.local"
-$env:BOOTSTRAP_DESIGNER_PASSWORD="CambiaEstaClave123"
+$env:BOOTSTRAP_DESIGNER_PASSWORD="<elige-una-contraseña>"
 $env:JWT_SECRET="pon-aqui-una-clave-aleatoria-de-32-caracteres-o-mas"
 mvn spring-boot:run
 ```
 
 La API queda en `http://localhost:8080/api`. La base SQLite se crea en `./data/albrimon.db`. Para comprobar que responde: `http://localhost:8080/api/health`.
 
-Las credenciales del ejemplo son solo para desarrollo. Con ellas se inicia sesión como diseñador en la app.
+Los valores entre `<...>` los eliges tú. Con el correo y la contraseña que pongas se inicia sesión como diseñador en la app. No guardes contraseñas reales en el repositorio.
 
 ## Cómo correr la app
 

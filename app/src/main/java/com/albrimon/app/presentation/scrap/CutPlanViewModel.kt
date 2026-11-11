@@ -11,7 +11,7 @@ import com.albrimon.app.data.remote.ApiResult
 import com.albrimon.app.data.remote.dto.PieceDto
 import com.albrimon.app.data.remote.dto.ProjectDto
 import com.albrimon.app.data.remote.dto.UsageInput
-import com.albrimon.app.data.repository.ScrapRepository
+import com.albrimon.app.domain.repository.ScrapRepository
 import com.albrimon.app.domain.cut.CutPlan
 import com.albrimon.app.domain.cut.CutPlanner
 import com.albrimon.app.domain.cut.Piece

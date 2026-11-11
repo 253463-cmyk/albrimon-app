@@ -10,26 +10,27 @@ import com.albrimon.app.domain.model.Project
 import com.albrimon.app.domain.model.ProjectStatus
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.albrimon.app.domain.repository.ProjectRepository
 
 /** Proyectos y sus piezas de patronaje, desde la API REST (/api/projects). */
 @Singleton
-class ProjectRepository @Inject constructor(
+class ProjectRepositoryImpl @Inject constructor(
     private val api: AlbrimonApi
-) {
-    suspend fun projects(): ApiResult<List<Project>> =
+) : ProjectRepository {
+    override suspend fun projects(): ApiResult<List<Project>> =
         safeApiCall { api.projects().map { it.toDomain() } }
 
     /** El backend no filtra por cliente, así que se filtra aquí. */
-    suspend fun projectsByClient(clientId: Long): ApiResult<List<Project>> =
+    override suspend fun projectsByClient(clientId: Long): ApiResult<List<Project>> =
         when (val result = projects()) {
             is ApiResult.Success -> ApiResult.Success(result.data.filter { it.clientId == clientId })
             is ApiResult.Failure -> result
         }
 
-    suspend fun project(id: Long): ApiResult<Project> =
+    override suspend fun project(id: Long): ApiResult<Project> =
         safeApiCall { api.project(id).toDomain() }
 
-    suspend fun create(
+    override suspend fun create(
         name: String,
         clientId: Long,
         dueDate: String?,
@@ -47,7 +48,7 @@ class ProjectRepository @Inject constructor(
     }
 
     /** Cambia el estado conservando los demás datos (el backend reemplaza todos los campos). */
-    suspend fun updateStatus(project: Project, status: ProjectStatus): ApiResult<Project> = safeApiCall {
+    override suspend fun updateStatus(project: Project, status: ProjectStatus): ApiResult<Project> = safeApiCall {
         api.updateProject(
             project.id,
             ProjectRequest(
@@ -60,12 +61,12 @@ class ProjectRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun pieces(projectId: Long): ApiResult<List<PatternPiece>> =
+    override suspend fun pieces(projectId: Long): ApiResult<List<PatternPiece>> =
         safeApiCall { api.pieces(projectId).map { it.toDomain() } }
 
-    suspend fun addPiece(projectId: Long, request: PieceRequest): ApiResult<PatternPiece> =
+    override suspend fun addPiece(projectId: Long, request: PieceRequest): ApiResult<PatternPiece> =
         safeApiCall { api.createPiece(projectId, request).toDomain() }
 
-    suspend fun deletePiece(projectId: Long, pieceId: Long): ApiResult<Unit> =
+    override suspend fun deletePiece(projectId: Long, pieceId: Long): ApiResult<Unit> =
         safeApiCall { api.deletePiece(projectId, pieceId) }
 }

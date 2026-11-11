@@ -3,7 +3,7 @@ package com.albrimon.app.presentation.client
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.albrimon.app.data.remote.ApiResult
-import com.albrimon.app.data.repository.ClientRepository
+import com.albrimon.app.domain.repository.ClientRepository
 import com.albrimon.app.domain.model.Client
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

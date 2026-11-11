@@ -17,24 +17,25 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import com.albrimon.app.domain.repository.ScrapRepository
 
 /**
  * Único punto de acceso a retazos para los ViewModels.
  * API (Spring Boot) = fuente de verdad; Room = caché que permite ver el inventario sin conexión.
  */
 @Singleton
-class ScrapRepository @Inject constructor(
+class ScrapRepositoryImpl @Inject constructor(
     private val api: AlbrimonApi,
     private val scrapDao: ScrapDao,
     private val usageDao: UsageDao,
     private val photos: PhotoStorage
-) {
-    val scraps: Flow<List<Scrap>> = scrapDao.observeAll().map { list -> list.map { it.toDomain() } }
+) : ScrapRepository {
+    override val scraps: Flow<List<Scrap>> = scrapDao.observeAll().map { list -> list.map { it.toDomain() } }
 
-    suspend fun getCached(id: Long): Scrap? = scrapDao.get(id)?.toDomain()
+    override suspend fun getCached(id: Long): Scrap? = scrapDao.get(id)?.toDomain()
 
     /** Descarga el inventario y reemplaza la caché local. */
-    suspend fun refresh(): ApiResult<Unit> =
+    override suspend fun refresh(): ApiResult<Unit> =
         when (val result = safeApiCall { api.scraps() }) {
             is ApiResult.Success -> {
                 scrapDao.replaceAll(result.data.map { it.toEntity() })
@@ -44,7 +45,7 @@ class ScrapRepository @Inject constructor(
         }
 
     /** Crea (id == null) o actualiza un retazo. Solo cachea localmente si la API confirmó. */
-    suspend fun save(id: Long?, request: ScrapRequest): ApiResult<Scrap> =
+    override suspend fun save(id: Long?, request: ScrapRequest): ApiResult<Scrap> =
         when (val result = safeApiCall {
             if (id == null) api.createScrap(request) else api.updateScrap(id, request)
         }) {
@@ -56,7 +57,7 @@ class ScrapRepository @Inject constructor(
             is ApiResult.Failure -> result
         }
 
-    suspend fun delete(scrap: Scrap): ApiResult<Unit> =
+    override suspend fun delete(scrap: Scrap): ApiResult<Unit> =
         when (val result = safeApiCall { api.deleteScrap(scrap.id) }) {
             is ApiResult.Success -> {
                 scrapDao.delete(scrap.id)
@@ -66,14 +67,14 @@ class ScrapRepository @Inject constructor(
             is ApiResult.Failure -> result
         }
 
-    suspend fun projects(): ApiResult<List<ProjectDto>> = safeApiCall { api.projects() }
+    override suspend fun projects(): ApiResult<List<ProjectDto>> = safeApiCall { api.projects() }
 
-    suspend fun pieces(projectId: Long): ApiResult<List<PieceDto>> = safeApiCall { api.pieces(projectId) }
+    override suspend fun pieces(projectId: Long): ApiResult<List<PieceDto>> = safeApiCall { api.pieces(projectId) }
 
-    fun usage(projectId: Long): Flow<List<ScrapUsage>> =
+    override fun usage(projectId: Long): Flow<List<ScrapUsage>> =
         usageDao.observeByProject(projectId).map { list -> list.map { it.toDomain() } }
 
-    suspend fun refreshUsage(projectId: Long): ApiResult<Unit> =
+    override suspend fun refreshUsage(projectId: Long): ApiResult<Unit> =
         when (val result = safeApiCall { api.usage(projectId) }) {
             is ApiResult.Success -> {
                 usageDao.replaceForProject(projectId, result.data.map { it.toEntity() })
@@ -86,7 +87,7 @@ class ScrapRepository @Inject constructor(
      * Envía a la API el plan calculado por CutPlanner. El backend valida y guarda en una
      * transacción; solo si responde OK se refresca inventario e historial.
      */
-    suspend fun applyPlan(projectId: Long, usages: List<UsageInput>): ApiResult<Int> =
+    override suspend fun applyPlan(projectId: Long, usages: List<UsageInput>): ApiResult<Int> =
         when (val result = safeApiCall { api.applyPlan(ApplyPlanRequest(projectId, usages)) }) {
             is ApiResult.Success -> {
                 refresh()
